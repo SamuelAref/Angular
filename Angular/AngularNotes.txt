@@ -1,0 +1,772 @@
+Introduction to AngularJS
+
+    - MVC style JavaScript framework for creating single page apps
+    
+    Features 
+
+        - 2 way ata binding 
+        - templating
+        - DOM interaction
+        - filters
+        - directives
+        - many more...
+
+    SPA - Single Page Apps 
+
+        - Primarily used to make single page, data-driven applications
+        - Additional content brought into the web page without the need to refresh 
+        - Uses 'views' to achieve this 
+
+
+MVC Architecture 
+
+    Model Views Controller 
+
+        - Model 
+            - think of model as data 
+            - JSON, database data etc 
+
+        - View 
+            - used to display content & data to a user in a browser 
+            - its HTML
+            - use expressions to insert data into views <html tag> {{data}} </html tag>
+
+        - Controller 
+            - Control the functionality of our views 
+            - performs the interaction between our models and our views
+            - Different controllers for different areas in our application 
+
+    Example 
+        - User clicks a 'show users' button in a view
+        - The 'UserController' recognizes the button click event and performs a function 
+        - The function communicates with the 'users' model and retrieves all the user data 
+        - The controller passes accessibility to this data to the view, which then displays it to the end user via expressions 
+
+    MVC = Model, View, Controller 
+    MVW = Model, View, Whatever 
+
+    Underlying Principle is separation of concerns 
+
+
+Downloading AngularJS 
+
+    - angularjs.org
+    - put it inside our projectFolder/app/lib -- for organization 
+    - then script import in index.html next to link of css 
+
+
+2- way Data Binding 
+
+    - so the 2 way data binding refers to the process of us changing the view inturn changing the model, and the model change also changes the view 
+
+    example 
+        - here we add the angular accessibility to the html template tag by adding 'ng-app'
+        - and as an example we set an input and it updates in realtime as we type it , we add ng-model = "modelName"
+
+        <!DOCTYPE html>
+        <html lang="en" ng-app> //here we added ng-app to give access to angular to our document 
+
+            <head>
+                <title>Angular Tutorial</title>
+                <link href="content/css/styles.css" rel="stylesheet" type="text/css" />
+                <script src="app/lib/angular.min.js"></script>
+            </head>
+
+            <body>
+
+                <input type="text" ng-model = "favMeat" placeholder="Enter your fav meat"> // we mad a model here 
+                <p>your fav eat is : {{ favMeat}}</p>
+
+            </body>
+        </html>
+
+
+Intro to Directives 
+
+    - Run the show LOL 
+    - explored the angular documentation, which have various directives 
+    - examples of directives are ng-app and ng-model 
+    - also custom directive can be created 
+
+
+Expressions 
+
+    - are snippets of js code like {{favMeat }}
+    - so expressions can be accessed from directives like in this example,
+      we used ng-init in body tag to declare an element 
+
+        <body ng-init = "numbers = [1,2,3,4]">
+
+            <input type="text" ng-model = "favMeat" placeholder="Enter your fav meat">
+            
+            <p> {{ numbers[0]}}</p> // so expressions can access the directive variables from anywhere, even in classes   
+
+        </body>
+
+
+Directive - ng-repeat 
+
+    - to use a repeating data like array outputting 
+    - so in this example, we have used to output the string of arrays in the body tag from ng-init , 
+    - then we output it like a for loop in the li tag to repeat it, by ng-repeat
+
+     <body ng-init = "ninjas = ['yoshi', 'saami', 'shaun']">
+
+        <input type="text" ng-model = "favMeat" placeholder="Enter your fav meat">
+
+        <ul>
+
+            <li ng-repeat = "ninja in ninjas"> {{ ninja }}</li>
+
+        </ul>
+
+     </body>
+
+
+Modules
+
+    - modules are like controllers that control our apps 
+    - so we created our app.js file in the app folder, linked to it in the html file and in there 
+
+    // app.js file 
+        var myNinjaApp = angular.module('myNinjaApp', []); //we declare our module here 
+
+        myNinjaApp.config(function(){ // these are some of the functionality 
+
+
+            });
+
+        myNinjaApp.run(function(){ // another functionality
+
+            });
+
+        myNinjaApp.controller // another functionality ... its many 
+
+
+    // our index file, here before , we used the ng-app only to run our app, now we give control back to 
+       the module we created by saying ng-app = "moduleName" 
+
+        <html lang="en" ng-app = "myNinjaApp"> // this is not the variable but the name in the quotation in the app.js file 
+
+
+Controllers 
+
+    - controllers are a smart way to access datas and variables efficiently
+    - so continuing from the above example, we have declared our module in html tag
+    - after that we have declared our module name and controller name in the app.js file 
+    - here we can manipulate and send our data as we like
+    - in this example I have included 2 types of controller declaration, 1 is non-secure, 2nd one is secure 
+
+        // app.js file one 
+
+            var myNinjaApp = angular.module('myNinjaApp', []);
+
+            myNinjaApp.controller('NinjaController', function($scope){
+
+                $scope.message = "hey, y'all";
+                $scope.runners = ['haile', 'kenenisa', 'gelete', 'ayzosh'];
+
+            })
+
+        // app.js file two (just bracket is added and scope is put as first argument )
+
+            var myNinjaApp = angular.module('myNinjaApp', []);
+
+            myNinjaApp.controller('NinjaController',['$scope', function($scope){
+
+                $scope.message = "hey, y'all";
+                $scope.runners = ['haile', 'kenenisa', 'gelete', 'ayzosh'];
+
+            }])
+
+        // html file (same in both cases )
+
+            <div ng-controller = "NinjaController"> // so here the controller we defined has a scope limited to this div and nowhere else 
+
+                <p> {{ message }}</p>
+
+                <ul>
+
+                    <li ng-repeat = " runner in runners">{{runner}}</li>
+            
+                </ul>
+
+            </div>
+
+ 
+Filters 
+
+    filters, like it's name, returns a filtered value based on the rules we give it 
+    In this example we saw 
+                - order by : 'variable name'  // this orders  the data to be ordered according to the variable name alphabetically
+                - filter : search // this, in combination with input field with ng-model = "search", can help as a search filter based on what we type
+                - currency // this filter will notify the html that the number we output is a filter , the currency unit is adjustable
+
+            - note - the order by and filter apply to the whole data , but the currency applies to the specific attribute within the data
+            - there are various filter types in the documentation 
+
+
+                app.js file 
+
+                    var myNinjaApp = angular.module('myNinjaApp', []);
+
+                    myNinjaApp.controller('NinjaController',['$scope', function($scope){
+
+                        $scope.message = "hey, y'all";
+                        $scope.runners = [
+
+                            {
+                                name : "yoshi",
+                                belt : "green",
+                                rate : 20
+                            },
+
+                            {
+                                name : "crystal",
+                                belt : "yellow",
+                                rate : 30
+                            },
+
+                            {
+                                name : "ryu",
+                                belt : "orange",
+                                rate : 10
+                            },
+
+                            {
+                                name : "Shaun",
+                                belt : "black",
+                                rate : 1000
+                            }
+                        ];
+
+
+
+
+                    }])
+
+
+                html file ( same as above but the change is below)
+
+                    <div ng-controller = "NinjaController">
+
+                        <input type="text" ng-model = "search">
+
+
+
+                        <ul>
+                    
+                            <li ng-repeat = " runner in runners | orderBy : 'name' | filter : search ">
+                            
+                            {{runner.name}} - {{ runner.rate | currency}}
+                            
+                            </li>
+
+                        </ul>
+
+
+                        </div>
+
+
+ng - include 
+
+    - helps organize our views 
+    - ng - include brings  html file from another file and dump it in our current view 
+    - so in this tutorial we created a nav bar in the header.html file 
+    - then we imported this in our html file in 2 ways 
+    - don't forget the quotation inside
+
+            - way one (using include tag)
+
+                <ng-include src = "'header.html'">
+ 
+                </ng-include> 
+
+
+            - way two (using any tag )
+
+                <header ng-include = "'header.html'">
+
+
+                </header>
+
+
+ng - show and ng - hide 
+
+    - are directives used to show or hide data dependant on conditions
+    - so in our example we included a new attribute called "available" and this either represented true or false 
+    - then in our html file we used the ng-show = "object.attribute" or ng-hide = "object.attribute"
+
+
+        <header ng-include = "'header.html'"></header>
+        <div class="content">
+
+            <div ng-controller = "NinjaController">
+
+                <input type="text" ng-model = "search" placeholder="Search for ninja ">
+
+                <ul>
+    
+                    <li ng-repeat = " runner in runners | orderBy : 'name' | filter : search " ng-show = "runner.available" ng-hide = "!runner.available">
+            
+                        {{runner.name}} - {{ runner.rate | currency}}
+            
+                    </li>
+
+                </ul>
+
+
+            </div>
+
+        </div> 
+
+
+ng - click  
+
+    - responds to user click events 
+    - so in our example, we used the ng - click to filter by name and belt 
+    - also we used ng-click to pass a function that removes an element , the function was defined in app.js
+
+
+    example 
+
+        html file 
+
+            <div ng-controller = "NinjaController">
+
+                <button ng-click = "order = 'name'">Order by Name</button>
+                <button ng-click = " order = 'belt'" >Order by Belt</button>
+
+                <input type="text" ng-model = "search" placeholder="Search for ninja ">
+
+                <ul>
+        
+                <li ng-repeat = " runner in runners | orderBy : order | filter : search " ng-show = "runner.available">
+                    
+                <h3>{{runner.name}} - {{ runner.rate | currency}} </h3> 
+                <div class = "remove" ng-click = "removeNinja(runner)">X</div>
+                <span class = "belt" style =" background: {{runner.belt}} ">{{runner.belt}} belt </span>
+                    
+                </li>
+
+                </ul>
+
+            </div>
+        
+        app.js file 
+
+            var myNinjaApp = angular.module('myNinjaApp', []);
+
+            myNinjaApp.controller('NinjaController',['$scope', function($scope){
+
+                $scope.removeNinja = function(runner){
+
+                    runner.available = false;
+
+                }
+
+                $scope.message = "hey, y'all";
+
+                $scope.runners = [
+
+                    {
+                        name : "yoshi",
+                        belt : "green",
+                        rate : 20,
+                        available : true
+                    },
+
+                    {
+                        name : "crystal",
+                        belt : "yellow",
+                        rate : 30,
+                        available : true
+
+                    },
+
+                    {
+                        name : "ryu",
+                        belt : "orange",
+                        rate : 10,
+                        available : true
+
+                    },
+
+                    {
+                        name : "Shaun",
+                        belt : "black",
+                        rate : 1000,
+                        available : true
+
+                    }
+                ];
+
+            }])
+
+
+ng - submit
+
+    - so this example was focused on submitting a form using the ng-submit directive
+    - in the ng-submit directive we define a function that we want to fire when the form button is clicked 
+    - in that function we can manipulate the variables we set as a value to the input fields 
+
+
+    html file 
+
+                    <!DOCTYPE html>
+                <html lang="en" ng-app = "myNinjaApp">
+                <head>
+                    <title>Angular Tutorial</title>
+                    <link href="content/css/styles.css" rel="stylesheet" type="text/css" />
+                    <script src="app/lib/angular.min.js"></script>
+                    <script src="app/app.js"></script>
+                </head>
+
+                <body>
+
+                    <!-- <ng-include src = "'header.html'">
+                
+                    </ng-include> -->
+
+                    <header ng-include = "'header.html'"></header>
+                    <div class="content">
+
+                    <div ng-controller = "NinjaController">
+
+                        <button ng-click = "order = 'name'">Order by Name</button>
+                        <button ng-click = " order = 'belt'" >Order by Belt</button>
+
+                        <input type="text" ng-model = "search" placeholder="Search for ninja ">
+
+                        <ul>
+                
+                        <li ng-repeat = " runner in runners | orderBy : order | filter : search " ng-show = "runner.available">
+                            
+                        <h3>{{runner.name}} - {{ runner.rate | currency}} </h3> 
+                        <div class = "remove" ng-click = "removeNinja(runner)">X</div>
+                        <span class = "belt" style =" background: {{runner.belt}} ">{{runner.belt}} belt </span>
+                            
+                        </li>
+                        </ul>
+
+                        <form  ng-submit = "addNinja()">
+
+                        <input type="text" placeholder="name" ng-model = "newNinja.name" >
+                        <input type="text" placeholder="rate" ng-model = "newNinja.rate" >
+                        <input type="text" placeholder="belt" ng-model = "newNinja.belt" >
+                        <input type="submit" value="Add new ninja">
+
+                        </form>
+
+
+
+
+                    </div>
+
+                </div>
+
+
+                </body>
+                </html>
+
+    app.js 
+
+                var myNinjaApp = angular.module('myNinjaApp', []);
+
+                myNinjaApp.controller('NinjaController',['$scope', function($scope){
+
+                    $scope.removeNinja = function(runner){
+
+                        runner.available = false;
+
+                    }
+
+                    $scope.addNinja = function(obj){
+
+                        $scope.runners.push({
+
+                            name : $scope.newNinja.name,
+                            belt : $scope.newNinja.belt,
+                            rate : parseInt($scope.newNinja.rate),
+                            available : true
+                        });
+
+                        $scope.newNinja.name = "";
+                        $scope.newNinja.belt = "";
+                        $scope.newNinja.rate = "";
+                    }
+                    $scope.message = "hey, y'all";
+                    $scope.runners = [
+
+                        {
+                            name : "yoshi",
+                            belt : "green",
+                            rate : 20,
+                            available : true
+                        },
+
+                        {
+                            name : "crystal",
+                            belt : "yellow",
+                            rate : 30,
+                            available : true
+
+                        },
+
+                        {
+                            name : "ryu",
+                            belt : "orange",
+                            rate : 10,
+                            available : true
+
+                        },
+
+                        {
+                            name : "Shaun",
+                            belt : "black",
+                            rate : 1000,
+                            available : true
+
+                        }
+                    ];
+
+
+                }])
+
+
+ng - src
+
+     <div ng-controller = "NinjaController">
+
+        <button ng-click = "order = 'name'">Order by Name</button>
+        <button ng-click = " order = 'belt'" >Order by Belt</button>
+
+        <input type="text" ng-model = "search" placeholder="Search for ninja ">
+
+        <ul>
+  
+          <li ng-repeat = " runner in runners | orderBy : order | filter : search " ng-show = "runner.available">
+            
+            <img ng-src="{{runner.thumb}}" style="margin: -12px 10px 0 0 ; float: left; width : 50px;" alt="" ng-show = "runner.thumb">
+           <h3>{{runner.name}} - {{ runner.rate | currency}} </h3> 
+           <div class = "remove" ng-click = "removeNinja(runner)">X</div>
+           <span class = "belt" style =" background: {{runner.belt}} ">{{runner.belt}} belt </span>
+            
+          </li>
+        </ul> 
+
+        <form  ng-submit = "addNinja()">
+
+          <input type="text" placeholder="name" ng-model = "newNinja.name" >
+          <input type="text" placeholder="rate" ng-model = "newNinja.rate" >
+          <input type="text" placeholder="belt" ng-model = "newNinja.belt" >
+          <input type="submit" value="Add new ninja">
+
+        </form>
+
+
+
+
+      </div>
+
+
+Views and Routes
+
+    - first we downloaded a file from the angular js website called angular-route.min.js 
+    - then we imported it like a scipt in the index file 
+    - then we cut the content tag and put it in it's own directory.html file 
+    - then we linked the route in the app.js file 
+    - we also sent the controller through routing so no need to specify which route we are using in the html file (directory.html in this case)
+    - we also set up the nav bar buttons to work 
+
+    app.js file // i just pasted the route part
+
+        var myNinjaApp = angular.module('myNinjaApp', ['ngRoute']); //here we added the ngRoute
+
+        myNinjaApp.config(['$routeProvider', function($routeProvider){
+
+            $routeProvider
+
+                .when('/home', {
+
+                    templateUrl : 'views/home.html'
+                })
+
+                .when('/directory', {
+
+                    templateUrl : 'views/directory.html',
+                    controller : 'NinjaController'
+                })
+
+                .otherwise({
+
+                    redirectTo : '/home'
+                })
+        }]);
+
+
+JSON and $http 
+
+    - our data would be best handled using json file 
+    - so the first thing we do is convert our file to json format simply by angular.toJson(data)  // console.log(angular.toJson($scope.runners));
+    - then we validated it in json lint website 
+    - then we created a data/ninjas.json file 
+    - then in the app.js file in our controller, we added $http as the parameter then we used the get method to access it 
+    - note that , the normal way to get was improved after angular 1.5 minamin so another ways is used here just like react 
+
+
+    app.js file 
+
+            myNinjaApp.controller('NinjaController', ['$scope', '$http', function($scope, $http){ //included http
+
+            $scope.removeNinja = function(runner){
+
+                runner.available = false;
+
+            };
+
+            $scope.addNinja = function(obj){
+
+                $scope.runners.push({
+
+                    name : $scope.newNinja.name,
+                    belt : $scope.newNinja.belt,
+                    rate : parseInt($scope.newNinja.rate),
+                    available : true
+                });
+
+                $scope.newNinja.name = "";
+                $scope.newNinja.belt = "";
+                $scope.newNinja.rate = "";
+            };
+
+
+            // $http.get('data/ninjas.json').success(function(data){ // this was the old way this doesn't work now
+
+            //     $scope.runners = data;
+
+            // });
+
+
+            $http({ // apparently data fetching was changed in angular 1.5 and above
+                method: 'get', 
+                url: 'data/ninjas.json'
+
+            }).then(function (response) {
+
+                data = response.data; // access the data 
+                console.log(data);
+                $scope.runners = data; 
+                
+            },function (error){
+                console.log(error, 'can not get data.');
+            })
+
+
+        }]);
+        
+            // console.log(angular.toJson($scope.runners));
+
+
+Custom Directive 
+
+    - first we allowed the home page access to the data by allowing it a controller in the app.json file 
+    - then we created our directive name in the home.html file 
+    - the naming should be in a hyphen like my-directive 
+    - then we created our directive in the app.js file that will be named as not the hyphen above but will be a a camel case like myDirective 
+    - then we defined different values we want to access plus the controller and template
+    - so for the template we created our own
+    - so to conclude whenever this directive is called, all these properties will be displayed 
+
+
+    app.js file 
+
+        myNinjaApp.directive('randomNinja', [function(){
+
+                return {
+
+                        //E A C M
+                        // E - element means only use as an element in the html
+                        // A - as an attribute
+                        // EA - element and attribute
+
+                    restrict : 'E', 
+                    scope : {
+
+                        runners : '=',
+                        title : '='
+
+                    },
+
+                    templateUrl : 'views/random.html',
+
+                    controller : function($scope){
+
+                        $scope.random = Math.floor(Math.random() * 4);
+
+
+                    }
+                };
+        }]);
+
+
+    home.html
+    
+        <div class="content">
+
+            <h1>Home page</h1>
+
+            <random-ninja runners = "runners" title = "'Random Ninja'"></random-ninja>
+
+        </div>
+
+
+Transclude & Replace 
+
+    Transclude - will include anything we add inside the custom directive 
+    Replace - will replace our custom directive name with a formal name to be displayed in the inspection of the element 
+
+    so - we included both of these inside the directive property in the app.js file here is the snippet 
+
+    app.js 
+
+        myNinjaApp.directive('randomNinja', [function(){
+
+        return {
+
+                //E A C M
+                // E - element means only use as an element in the html
+                // A - as an attribute
+                // EA - element and attribute
+
+            restrict : 'E', 
+            scope : {
+
+                runners : '=',
+                title : '='
+
+            },
+
+            templateUrl : 'views/random.html',
+            transclude : true,
+            replace : true,
+            controller : function($scope){
+
+                $scope.random = Math.floor(Math.random() * 4);
+
+
+            }
+        };
+
+    home.html
+
+            <random-ninja runners = "runners" title = "'Random Ninja'">
+
+                <p>check our random ninja</p>
+        
+            </random-ninja>
+
+
+
+
+
